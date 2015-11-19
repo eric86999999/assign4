@@ -3,7 +3,7 @@ PImage bg1,bg2,start1,start2,end1,end2,enemy,fighter,hp,treasure,shoot;
 boolean upPressed=false,downPressed=false,leftPressed=false,rightPressed=false;  //key movement
 boolean shooting=false;
 //-----------------------------------------
-int health,bgX,bgY,fighterX,fighterY,treasureX,treasureY;
+int health,bgX,bgY,fighterX,fighterY,treasureX,treasureY,shootX;
 int GAMEMODE=1,ENEMYTEAM=0,shootcount=0;
 final int title=1,playing=2,gameover=3;
 final int straight=1,slanted=2,diamond=3;
@@ -23,9 +23,16 @@ int[] teamDiamond=new int[8];
 float teamDiaY=floor(random(0,419));
 float teamDiaAngle;
 int diamondTrack;
+//---------------------------------------------------shoots
+int[] shootCount=new int[5];
+int[] shootY=new int[5];
+int[] shootTouch=new int[5];
+boolean[] shootAllow=new boolean[5];
 //---------------------------------------------------
 int upDetect,downDetect,leftDetect,rightDetect;    //detect touch
-int shootUp;
+
+
+
 
 
 
@@ -83,14 +90,21 @@ void setup () {
           }
   diamondTrack=teamDiamond[0];
 
+//---------------------------------------------------------------------initialize shots
 
+  for(int i=0;i<5;i++){
+        shootCount[i]=1000000;
+     }
+  for(int i=0;i<5;i++){
+        shootY[i]=fighterY;
+     }   
+  for(int i=0;i<5;i++){
+        shootAllow[i]=true;
+     }
+     
 
+//-------------------------------------------------------------
 }
-
-//---------------------------------------------------------------------
-
-
-
 
 
 void draw()
@@ -146,13 +160,13 @@ void draw()
       image(hp,405,28);  
 
       image(treasure,treasureX,treasureY);  //treasure  
-
-      
+     
 //-------------------------------------------------------touching detect
        upDetect=floor(random(fighterX,fighterX+51));
        downDetect=floor(random(fighterX,fighterX+51));
        leftDetect=floor(random(fighterY,fighterY+51));
        rightDetect=floor(random(fighterY,fighterY+51));
+       
 //------------------------------------------------------healing detect 
        if( leftDetect>=treasureY && leftDetect<=treasureY+41 && fighterX>=treasureX && fighterX<=treasureX+41 || rightDetect>=treasureY && rightDetect<=treasureY+41 && fighterX+51>=treasureX && fighterX+51<=treasureX+41
        || leftDetect>=treasureY && leftDetect<=treasureY+41 && fighterX>=treasureX && fighterX<=treasureX+41 || rightDetect>=treasureY && rightDetect<=treasureY+41 && fighterX+51>=treasureX && fighterX+51<=treasureX+41){
@@ -162,7 +176,103 @@ void draw()
           health+=20;
             }
          }      
-//------------------------------------------------------------------          
+//-----------------------------------------------------------------shooting detect
+        shootCount[0]-=2;shootCount[1]-=2;shootCount[2]-=2;shootCount[3]-=2;shootCount[4]-=2;
+        image(shoot,shootCount[0],shootY[0]+14);image(shoot,shootCount[1],shootY[1]+14);image(shoot,shootCount[2],shootY[2]+14);image(shoot,shootCount[3],shootY[3]+14);image(shoot,shootCount[4],shootY[4]+14);
+        
+          if(shooting && shootAllow[0]){
+          shootCount[0]=fighterX-27;
+          shootY[0]=fighterY;
+          shootAllow[0]=false;
+          shooting=false;        
+        }
+        
+        if(shooting && shootAllow[1]){
+          shootCount[1]=fighterX-27;
+          shootY[1]=fighterY;
+          shootAllow[1]=false;
+          shooting=false;        
+        }
+        
+        if(shooting && shootAllow[2]){
+          shootCount[2]=fighterX-27;
+          shootY[2]=fighterY;
+          shootAllow[2]=false;
+          shooting=false;        
+        }
+        
+        if(shooting && shootAllow[3]){
+          shootCount[3]=fighterX-27;
+          shootY[3]=fighterY;
+          shootAllow[3]=false;
+          shooting=false;        
+        }
+        if(shooting && shootAllow[4]){
+          shootCount[4]=fighterX-27;
+          shootY[4]=fighterY;
+          shootAllow[4]=false;
+          shooting=false;        
+        }
+        
+      
+        if(shootCount[0]<=(-31)){
+        shootCount[0]=1000000;
+        shootAllow[0]=true;
+        shooting=false;
+            }
+        if(shootCount[1]<=(-31)){
+        shootCount[1]=1000000;
+        shootAllow[1]=true;
+        shooting=false;
+            }
+        if(shootCount[2]<=(-31)){
+        shootCount[2]=1000000;
+        shootAllow[2]=true;
+        shooting=false;
+            }
+        if(shootCount[3]<=(-31)){
+        shootCount[3]=1000000;
+        shootAllow[3]=true;
+        shooting=false;
+            }
+        if(shootCount[4]<=(-31)){
+        shootCount[4]=1000000;
+        shootAllow[4]=true;
+        shooting=false;
+            }
+            
+//-----------------------------------------------------------------------------------------------------damage detect
+        
+
+         
+         
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
 //------------------------------------------------------------------  
       switch(ENEMYTEAM){
         case straight:
@@ -179,32 +289,83 @@ void draw()
         teamStraight[3]+=4;
         teamStraight[4]+=4;
         straightTrack+=4;
-//---------------------------------------------------------fighter crash detect        
+//---------------------------------------------------------fighter crash detect       
+//ship0 
         if(upDetect>=teamStraight[0] && upDetect<=teamStraight[0]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[0] && downDetect<=teamStraight[0]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
       || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[0] && fighterX<=teamStraight[0]+61 ){
         teamStraight[0]=5000;
         
-        
         if(health>450){
           health-=40;
         }else{          
             GAMEMODE=gameover;
+           }         
           }
-          
-        }
+        if(shootCount[0]<=teamStraight[0] && shootCount[0]>=teamStraight[0]-61 && shootY[0]+13.5>teamStrY && shootY[0]+13.5<teamStrY+61){             //bullet hit
+           teamStraight[0]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamStraight[0] && shootCount[1]>=teamStraight[0]-61 && shootY[1]+13.5>teamStrY && shootY[1]+13.5<teamStrY+61){
+           teamStraight[0]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamStraight[0] && shootCount[2]>=teamStraight[0]-61 && shootY[2]+13.5>teamStrY && shootY[2]+13.5<teamStrY+61){
+           teamStraight[0]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamStraight[0] && shootCount[3]>=teamStraight[0]-61 && shootY[3]+13.5>teamStrY && shootY[3]+13.5<teamStrY+61){
+           teamStraight[0]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamStraight[0] && shootCount[4]>=teamStraight[0]-61 && shootY[4]+13.5>teamStrY && shootY[4]+13.5<teamStrY+61){
+           teamStraight[0]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+         
         
+        
+//ship1                        
         if(upDetect>=teamStraight[1] && upDetect<=teamStraight[1]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[1] && downDetect<=teamStraight[1]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
       || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[1] && fighterX<=teamStraight[1]+61){
-        teamStraight[1]=5000;
-        
-        
+        teamStraight[1]=5000;                
         if(health>450){
           health-=40;
         }else{          
             GAMEMODE=gameover;
           }
         }
-        
+        if(shootCount[0]<=teamStraight[1] && shootCount[0]>=teamStraight[1]-61 && shootY[0]+13.5>teamStrY && shootY[0]+13.5<teamStrY+61){             //bullet hit
+           teamStraight[1]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamStraight[1] && shootCount[1]>=teamStraight[1]-61 && shootY[1]+13.5>teamStrY && shootY[1]+13.5<teamStrY+61){
+           teamStraight[1]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamStraight[1] && shootCount[2]>=teamStraight[1]-61 && shootY[2]+13.5>teamStrY && shootY[2]+13.5<teamStrY+61){
+           teamStraight[1]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamStraight[1] && shootCount[3]>=teamStraight[1]-61 && shootY[3]+13.5>teamStrY && shootY[3]+13.5<teamStrY+61){
+           teamStraight[1]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamStraight[1] && shootCount[4]>=teamStraight[1]-61 && shootY[4]+13.5>teamStrY && shootY[4]+13.5<teamStrY+61){
+           teamStraight[1]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+
+//ship2                 
         if(upDetect>=teamStraight[2] && upDetect<=teamStraight[2]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[2] && downDetect<=teamStraight[2]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
       || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[2] && fighterX<=teamStraight[2]+61){
         teamStraight[2]=5000;
@@ -216,7 +377,32 @@ void draw()
             GAMEMODE=gameover;
           }
         }
-        
+        if(shootCount[0]<=teamStraight[2] && shootCount[0]>=teamStraight[2]-61 && shootY[0]+13.5>teamStrY && shootY[0]+13.5<teamStrY+61){             //bullet hit
+           teamStraight[2]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamStraight[2] && shootCount[1]>=teamStraight[2]-61 && shootY[1]+13.5>teamStrY && shootY[1]+13.5<teamStrY+61){
+           teamStraight[2]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamStraight[2] && shootCount[2]>=teamStraight[2]-61 && shootY[2]+13.5>teamStrY && shootY[2]+13.5<teamStrY+61){
+           teamStraight[2]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamStraight[2] && shootCount[3]>=teamStraight[2]-61 && shootY[3]+13.5>teamStrY && shootY[3]+13.5<teamStrY+61){
+           teamStraight[2]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamStraight[2] && shootCount[4]>=teamStraight[2]-61 && shootY[4]+13.5>teamStrY && shootY[4]+13.5<teamStrY+61){
+           teamStraight[2]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//ship3        
         if(upDetect>=teamStraight[3] && upDetect<=teamStraight[3]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[3] && downDetect<=teamStraight[3]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
       || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[3] && fighterX<=teamStraight[3]+61){
         teamStraight[3]=5000;
@@ -228,7 +414,32 @@ void draw()
             GAMEMODE=gameover;
           }
         }
-        
+        if(shootCount[0]<=teamStraight[3] && shootCount[0]>=teamStraight[3]-61 && shootY[0]+13.5>teamStrY && shootY[0]+13.5<teamStrY+61){             //bullet hit
+           teamStraight[3]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamStraight[3] && shootCount[1]>=teamStraight[3]-61 && shootY[1]+13.5>teamStrY && shootY[1]+13.5<teamStrY+61){
+           teamStraight[3]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamStraight[3] && shootCount[2]>=teamStraight[3]-61 && shootY[2]+13.5>teamStrY && shootY[2]+13.5<teamStrY+61){
+           teamStraight[3]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamStraight[3] && shootCount[3]>=teamStraight[3]-61 && shootY[3]+13.5>teamStrY && shootY[3]+13.5<teamStrY+61){
+           teamStraight[3]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamStraight[3] && shootCount[4]>=teamStraight[3]-61 && shootY[4]+13.5>teamStrY && shootY[4]+13.5<teamStrY+61){
+           teamStraight[3]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//ship4        
         if(upDetect>=teamStraight[4] && upDetect<=teamStraight[4]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[4] && downDetect<=teamStraight[4]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
       || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[4] && fighterX<=teamStraight[4]+61){
         teamStraight[4]=5000;
@@ -240,23 +451,38 @@ void draw()
             GAMEMODE=gameover;
           }
         }
-
-
-
-
-
-
-
-
-
-
-   
+        if(shootCount[0]<=teamStraight[4] && shootCount[0]>=teamStraight[4]-61 && shootY[0]+13.5>teamStrY && shootY[0]+13.5<teamStrY+61){             //bullet hit
+           teamStraight[4]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamStraight[4] && shootCount[1]>=teamStraight[4]-61 && shootY[1]+13.5>teamStrY && shootY[1]+13.5<teamStrY+61){
+           teamStraight[4]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamStraight[4] && shootCount[2]>=teamStraight[4]-61 && shootY[2]+13.5>teamStrY && shootY[2]+13.5<teamStrY+61){
+           teamStraight[4]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamStraight[4] && shootCount[3]>=teamStraight[4]-61 && shootY[3]+13.5>teamStrY && shootY[3]+13.5<teamStrY+61){
+           teamStraight[4]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamStraight[4] && shootCount[4]>=teamStraight[4]-61 && shootY[4]+13.5>teamStrY && shootY[4]+13.5<teamStrY+61){
+           teamStraight[4]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//team straight reset   
         if(straightTrack>=1000){
-          for(int count1=0;count1<5;count1++){                       //team straight reset
+          for(int count1=0;count1<5;count1++){                       
           teamStraight[count1]=-61-61*count1*13/10;         
         }
         teamStrY=floor(random(0,419));
-        straightTrack=teamStraight[0];
+        straightTrack=-61;
         ENEMYTEAM=slanted;
           
         }
@@ -278,7 +504,7 @@ void draw()
         slantedTrack+=4;
         
         
-        
+//ship0         
           if(upDetect>=teamSlanted[0] && upDetect<=teamSlanted[0]+61 && fighterY>=teamSlaY && fighterY<=teamSlaY+61 || downDetect>=teamSlanted[0] && downDetect<=teamSlanted[0]+61 && fighterY+51>=teamSlaY && fighterY+51<=teamSlaY+61
       || leftDetect>=teamSlaY && leftDetect<=teamSlaY+61 && fighterX>=teamSlanted[0] && fighterX<=teamSlanted[0]+61){
         teamSlanted[0]=5000;
@@ -288,12 +514,38 @@ void draw()
           health-=40;
         }else{          
             GAMEMODE=gameover;
-          }
-          
+          }          
         }
         
+        
+        if(shootCount[0]<=teamSlanted[0] && shootCount[0]>=teamSlanted[0]-61 && shootY[0]+13.5>teamSlaY && shootY[0]+13.5<teamSlaY+61){             //bullet hit
+           teamSlanted[0]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamSlanted[0] && shootCount[1]>=teamSlanted[0]-61 && shootY[1]+13.5>teamSlaY && shootY[1]+13.5<teamSlaY+61){
+           teamSlanted[0]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamSlanted[0] && shootCount[2]>=teamSlanted[0]-61 && shootY[2]+13.5>teamSlaY && shootY[2]+13.5<teamSlaY+61){
+           teamSlanted[0]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamSlanted[0] && shootCount[3]>=teamSlanted[0]-61 && shootY[3]+13.5>teamSlaY && shootY[3]+13.5<teamSlaY+61){
+           teamSlanted[0]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamSlanted[0] && shootCount[4]>=teamSlanted[0]-61 && shootY[4]+13.5>teamSlaY && shootY[4]+13.5<teamSlaY+61){
+           teamSlanted[0]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//ship1        
         if(upDetect>=teamSlanted[1] && upDetect<=teamSlanted[1]+61 && fighterY>=teamSlaY+teamSlaAngle && fighterY<=teamSlaY+teamSlaAngle+61 || downDetect>=teamSlanted[1] && downDetect<=teamSlanted[1]+61 && fighterY+51>=teamSlaY+teamSlaAngle && fighterY+51<=teamSlaY+teamSlaAngle+61
-      || leftDetect>=teamSlaY+teamSlaAngle && leftDetect<=teamSlaY+teamSlaAngle+61 && fighterX>=teamSlanted[1] && fighterX<=teamSlanted[0]+61){
+      || leftDetect>=teamSlaY+teamSlaAngle && leftDetect<=teamSlaY+teamSlaAngle+61 && fighterX>=teamSlanted[1] && fighterX<=teamSlanted[1]+61){
         teamSlanted[1]=5000;
         
         
@@ -301,10 +553,36 @@ void draw()
           health-=40;
         }else{          
             GAMEMODE=gameover;
-          }
-          
+          }          
         }
         
+        
+        if(shootCount[0]<=teamSlanted[1] && shootCount[0]>=teamSlanted[1]-61 && shootY[0]+13.5>teamSlaY+teamSlaAngle && shootY[0]+13.5<teamSlaY+teamSlaAngle+61){             //bullet hit
+           teamSlanted[1]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamSlanted[1] && shootCount[1]>=teamSlanted[1]-61 && shootY[1]+13.5>teamSlaY+teamSlaAngle && shootY[1]+13.5<teamSlaY+teamSlaAngle+61){
+           teamSlanted[1]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamSlanted[1] && shootCount[2]>=teamSlanted[1]-61 && shootY[2]+13.5>teamSlaY+teamSlaAngle && shootY[2]+13.5<teamSlaY+teamSlaAngle+61){
+           teamSlanted[1]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamSlanted[1] && shootCount[3]>=teamSlanted[1]-61 && shootY[3]+13.5>teamSlaY+teamSlaAngle && shootY[3]+13.5<teamSlaY+teamSlaAngle+61){
+           teamSlanted[1]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamSlanted[1] && shootCount[4]>=teamSlanted[1]-61 && shootY[4]+13.5>teamSlaY+teamSlaAngle && shootY[4]+13.5<teamSlaY+teamSlaAngle+61){
+           teamSlanted[1]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }                
+//ship2        
         if(upDetect>=teamSlanted[2] && upDetect<=teamSlanted[2]+61 && fighterY>=teamSlaY+teamSlaAngle*2 && fighterY<=teamSlaY+teamSlaAngle*2+61 || downDetect>=teamSlanted[2] && downDetect<=teamSlanted[2]+61 && fighterY+51>=teamSlaY+teamSlaAngle*2 && fighterY+51<=teamSlaY+teamSlaAngle*2+61
       || leftDetect>=teamSlaY+teamSlaAngle*2 && leftDetect<=teamSlaY+teamSlaAngle*2+61 && fighterX>=teamSlanted[2] && fighterX<=teamSlanted[2]+61){
         teamSlanted[2]=5000;
@@ -314,10 +592,35 @@ void draw()
           health-=40;
         }else{          
             GAMEMODE=gameover;
-          }
-          
+          }          
         }
         
+        if(shootCount[0]<=teamSlanted[2] && shootCount[0]>=teamSlanted[2]-61 && shootY[0]+13.5>teamSlaY+teamSlaAngle*2 && shootY[0]+13.5<teamSlaY+teamSlaAngle*2+61){             //bullet hit
+           teamSlanted[2]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamSlanted[2] && shootCount[1]>=teamSlanted[2]-61 && shootY[1]+13.5>teamSlaY+teamSlaAngle*2 && shootY[1]+13.5<teamSlaY+teamSlaAngle*2+61){
+           teamSlanted[2]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamSlanted[2] && shootCount[2]>=teamSlanted[2]-61 && shootY[2]+13.5>teamSlaY+teamSlaAngle*2 && shootY[2]+13.5<teamSlaY+teamSlaAngle*2+61){
+           teamSlanted[2]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamSlanted[2] && shootCount[3]>=teamSlanted[2]-61 && shootY[3]+13.5>teamSlaY+teamSlaAngle*2 && shootY[3]+13.5<teamSlaY+teamSlaAngle*2+61){
+           teamSlanted[2]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamSlanted[2] && shootCount[4]>=teamSlanted[2]-61 && shootY[4]+13.5>teamSlaY+teamSlaAngle*2 && shootY[4]+13.5<teamSlaY+teamSlaAngle*2+61){
+           teamSlanted[2]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//ship3        
         if(upDetect>=teamSlanted[3] && upDetect<=teamSlanted[3]+61 && fighterY>=teamSlaY && fighterY<=teamSlaY+61 || downDetect>=teamSlanted[3] && downDetect<=teamSlanted[3]+61 && fighterY+51>=teamSlaY+teamSlaAngle*3 && fighterY+51<=teamSlaY+teamSlaAngle*3+61
       || leftDetect>=teamSlaY+teamSlaAngle*3 && leftDetect<=teamSlaY+teamSlaAngle*3+61 && fighterX>=teamSlanted[3] && fighterX<=teamSlanted[3]+61){
         teamSlanted[3]=5000;
@@ -331,6 +634,32 @@ void draw()
           
         }
         
+        if(shootCount[0]<=teamSlanted[3] && shootCount[0]>=teamSlanted[3]-61 && shootY[0]+13.5>teamSlaY+teamSlaAngle*3 && shootY[0]+13.5<teamSlaY+teamSlaAngle*3+61){             //bullet hit
+           teamSlanted[3]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamSlanted[3] && shootCount[1]>=teamSlanted[3]-61 && shootY[1]+13.5>teamSlaY+teamSlaAngle*3 && shootY[1]+13.5<teamSlaY+teamSlaAngle*3+61){
+           teamSlanted[3]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamSlanted[3] && shootCount[2]>=teamSlanted[3]-61 && shootY[2]+13.5>teamSlaY+teamSlaAngle*3 && shootY[2]+13.5<teamSlaY+teamSlaAngle*3+61){
+           teamSlanted[3]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamSlanted[3] && shootCount[3]>=teamSlanted[3]-61 && shootY[3]+13.5>teamSlaY+teamSlaAngle*3 && shootY[3]+13.5<teamSlaY+teamSlaAngle*3+61){
+           teamSlanted[3]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamSlanted[3] && shootCount[4]>=teamSlanted[3]-61 && shootY[4]+13.5>teamSlaY+teamSlaAngle*3 && shootY[4]+13.5<teamSlaY+teamSlaAngle*3+61){
+           teamSlanted[3]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//ship4        
         if(upDetect>=teamSlanted[4] && upDetect<=teamSlanted[4]+61 && fighterY>=teamSlaY+teamSlaAngle*4 && fighterY<=teamSlaY+teamSlaAngle*4+61 || downDetect>=teamSlanted[4] && downDetect<=teamSlanted[4]+61 && fighterY+51>=teamSlaY+teamSlaAngle*4 && fighterY+51<=teamSlaY+teamSlaAngle*4+61
       || leftDetect>=teamSlaY+teamSlaAngle*4 && leftDetect<=teamSlaY+teamSlaAngle*4+61 && fighterX>=teamSlanted[4] && fighterX<=teamSlanted[4]+61){
         teamSlanted[4]=5000;
@@ -343,64 +672,41 @@ void draw()
           }
           
         }
-        
-       
-      
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+   
+   
+         if(shootCount[0]<=teamSlanted[4] && shootCount[0]>=teamSlanted[4]-61 && shootY[0]+13.5>teamSlaY+teamSlaAngle*4 && shootY[0]+13.5<teamSlaY+teamSlaAngle*4+61){             //bullet hit
+           teamSlanted[4]=5000;
+          shootCount[0]=1000000;
+          shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamSlanted[4] && shootCount[1]>=teamSlanted[4]-61 && shootY[1]+13.5>teamSlaY+teamSlaAngle*4 && shootY[1]+13.5<teamSlaY+teamSlaAngle*4+61){
+           teamSlanted[4]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamSlanted[4] && shootCount[2]>=teamSlanted[4]-61 && shootY[2]+13.5>teamSlaY+teamSlaAngle*4 && shootY[2]+13.5<teamSlaY+teamSlaAngle*4+61){
+           teamSlanted[4]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamSlanted[4] && shootCount[3]>=teamSlanted[4]-61 && shootY[3]+13.5>teamSlaY+teamSlaAngle*4 && shootY[3]+13.5<teamSlaY+teamSlaAngle*4+61){
+           teamSlanted[4]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamSlanted[4] && shootCount[4]>=teamSlanted[4]-61 && shootY[4]+13.5>teamSlaY+teamSlaAngle*4 && shootY[4]+13.5<teamSlaY+teamSlaAngle*4+61){
+           teamSlanted[4]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }   
+//team slanted reset       
         if(slantedTrack>=1000){
-          for(int count2=0;count2<5;count2++){                       //team slanted reset
+          for(int count2=0;count2<5;count2++){                       
           teamSlanted[count2]=-61-61*count2*13/10;         
         }
         teamSlaY=floor(random(0,419));
         teamSlaAngle=random(teamSlaY/(-5),(480-teamSlaY-61)/5);
-        slantedTrack=teamSlanted[0];
+        slantedTrack=-61;
         ENEMYTEAM=diamond;
         }
         break;
@@ -426,7 +732,7 @@ void draw()
         teamDiamond[7]+=4;
         diamondTrack+=4;
         
-        
+//ship 0        
         if(upDetect>=teamDiamond[0] && upDetect<=teamDiamond[0]+61 && fighterY>=teamDiaY && fighterY<=teamDiaY+61 || downDetect>=teamDiamond[0] && downDetect<=teamDiamond[0]+61 && fighterY+51>=teamDiaY && fighterY+51<=teamDiaY+61
       || leftDetect>=teamDiaY && leftDetect<=teamDiaY+61 && fighterX>=teamStraight[0] && fighterX<=teamStraight[0]+61){        
         teamDiamond[0]=5000;
@@ -436,10 +742,35 @@ void draw()
           health-=40;
         }else{          
             GAMEMODE=gameover;
-          }
-          
+          }          
         }
-        
+         
+         if(shootCount[0]<=teamDiamond[0] && shootCount[0]>=teamDiamond[0]-61 && shootY[0]+13.5>teamDiaY && shootY[0]+13.5<teamDiaY+61){             //bullet hit
+           teamDiamond[0]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[0] && shootCount[1]>=teamDiamond[0]-61 && shootY[1]+13.5>teamDiaY && shootY[1]+13.5<teamDiaY+61){
+           teamDiamond[0]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[0] && shootCount[2]>=teamDiamond[0]-61 && shootY[2]+13.5>teamDiaY && shootY[2]+13.5<teamDiaY+61){
+           teamDiamond[0]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[0] && shootCount[3]>=teamDiamond[0]-61 && shootY[3]+13.5>teamDiaY && shootY[3]+13.5<teamDiaY+61){
+           teamDiamond[0]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[0] && shootCount[4]>=teamDiamond[0]-61 && shootY[4]+13.5>teamDiaY && shootY[4]+13.5<teamDiaY+61){
+           teamDiamond[0]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//ship1      
         if(upDetect>=teamDiamond[1] && upDetect<=teamDiamond[1]+61 && fighterY>=teamDiaY+teamDiaAngle && fighterY<=teamDiaY+teamDiaAngle+61 || downDetect>=teamDiamond[1] && downDetect<=teamDiamond[1]+61 && fighterY+51>=teamDiaY+teamDiaAngle && fighterY+51<=teamDiaY+teamDiaAngle+61
       || leftDetect>=teamDiaY+teamDiaAngle && leftDetect<=teamDiaY+teamDiaAngle+61 && fighterX>=teamDiamond[1] && fighterX<=teamDiamond[1]+61){
         teamDiamond[1]=5000;
@@ -452,7 +783,33 @@ void draw()
           }
           
         }
-        
+         if(shootCount[0]<=teamDiamond[1] && shootCount[0]>=teamDiamond[1]-61 && shootY[0]+13.5>teamDiaY+teamDiaAngle && shootY[0]+13.5<teamDiaY+teamDiaAngle+61){             //bullet hit
+           teamDiamond[1]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[1] && shootCount[1]>=teamDiamond[1]-61 && shootY[1]+13.5>teamDiaY+teamDiaAngle && shootY[1]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[1]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[1] && shootCount[2]>=teamDiamond[1]-61 && shootY[2]+13.5>teamDiaY+teamDiaAngle && shootY[2]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[1]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[1] && shootCount[3]>=teamDiamond[1]-61 && shootY[3]+13.5>teamDiaY+teamDiaAngle && shootY[3]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[1]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[1] && shootCount[4]>=teamDiamond[1]-61 && shootY[4]+13.5>teamDiaY+teamDiaAngle && shootY[4]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[1]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+
+//ship2      
         if(upDetect>=teamDiamond[2] && upDetect<=teamDiamond[2]+61 && fighterY>=teamDiaY+teamDiaAngle*2 && fighterY<=teamDiaY+teamDiaAngle*2+61 || downDetect>=teamDiamond[2] && downDetect<=teamDiamond[2]+61 && fighterY+51>=teamDiaY+teamDiaAngle*2 && fighterY+51<=teamDiaY+teamDiaAngle*2+61
       || leftDetect>=teamDiaY+teamDiaAngle*2 && leftDetect<=teamDiaY+teamDiaAngle*2+61 && fighterX>=teamDiamond[2] && fighterX<=teamDiamond[2]+61){
         teamDiamond[2]=5000;
@@ -465,7 +822,33 @@ void draw()
           }
           
         }
-        
+        if(shootCount[0]<=teamDiamond[3] && shootCount[0]>=teamDiamond[2]-61 && shootY[0]+13.5>teamDiaY+teamDiaAngle*2 && shootY[0]+13.5<teamDiaY+teamDiaAngle*2+61){             //bullet hit
+           teamDiamond[2]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[2] && shootCount[1]>=teamDiamond[2]-61 && shootY[1]+13.5>teamDiaY+teamDiaAngle*2 && shootY[1]+13.5<teamDiaY+teamDiaAngle*2+61){
+           teamDiamond[2]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[2] && shootCount[2]>=teamDiamond[2]-61 && shootY[2]+13.5>teamDiaY+teamDiaAngle*2 && shootY[2]+13.5<teamDiaY+teamDiaAngle*2+61){
+           teamDiamond[2]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[2] && shootCount[3]>=teamDiamond[2]-61 && shootY[3]+13.5>teamDiaY+teamDiaAngle*2 && shootY[3]+13.5<teamDiaY+teamDiaAngle*2+61){
+           teamDiamond[2]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[2] && shootCount[4]>=teamDiamond[2]-61 && shootY[4]+13.5>teamDiaY+teamDiaAngle*2 && shootY[4]+13.5<teamDiaY+teamDiaAngle*2+61){
+           teamDiamond[2]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+
+//ship3        
         if(upDetect>=teamDiamond[3] && upDetect<=teamDiamond[3]+61 && fighterY>=teamDiaY+teamDiaAngle && fighterY<=teamDiaY+teamDiaAngle+61 || downDetect>=teamDiamond[3] && downDetect<=teamDiamond[3]+61 && fighterY+51>=teamDiaY+teamDiaAngle && fighterY+51<=teamDiaY+teamDiaAngle+61
       || leftDetect>=teamDiaY+teamDiaAngle && leftDetect<=teamDiaY+teamDiaAngle+61 && fighterX>=teamDiamond[3] && fighterX<=teamDiamond[3]+61){
         teamDiamond[3]=5000;
@@ -479,6 +862,33 @@ void draw()
           
         }
         
+        if(shootCount[0]<=teamDiamond[3] && shootCount[0]>=teamDiamond[3]-61 && shootY[0]+13.5>teamDiaY+teamDiaAngle && shootY[0]+13.5<teamDiaY+teamDiaAngle+61){             //bullet hit
+           teamDiamond[3]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[3] && shootCount[1]>=teamDiamond[3]-61 && shootY[1]+13.5>teamDiaY+teamDiaAngle && shootY[1]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[3]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[3] && shootCount[2]>=teamDiamond[3]-61 && shootY[2]+13.5>teamDiaY+teamDiaAngle && shootY[2]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[3]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[3] && shootCount[3]>=teamDiamond[3]-61 && shootY[3]+13.5>teamDiaY+teamDiaAngle && shootY[3]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[3]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[3] && shootCount[4]>=teamDiamond[3]-61 && shootY[4]+13.5>teamDiaY+teamDiaAngle && shootY[4]+13.5<teamDiaY+teamDiaAngle+61){
+           teamDiamond[3]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+
+//ship4        
         if(upDetect>=teamDiamond[4] && upDetect<=teamDiamond[4]+61 && fighterY>=teamDiaY && fighterY<=teamDiaY+61 || downDetect>=teamDiamond[4] && downDetect<=teamDiamond[4]+61 && fighterY+51>=teamDiaY && fighterY+51<=teamDiaY+61
       || leftDetect>=teamDiaY && leftDetect<=teamDiaY+61 && fighterX>=teamDiamond[4] && fighterX<=teamDiamond[4]+61){
         teamDiamond[4]=5000;
@@ -491,7 +901,32 @@ void draw()
           }
           
         }
-        
+        if(shootCount[0]<=teamDiamond[4] && shootCount[0]>=teamDiamond[4]-61 && shootY[0]+13.5>teamDiaY && shootY[0]+13.5<teamDiaY+61){             //bullet hit
+           teamDiamond[4]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[4] && shootCount[1]>=teamDiamond[4]-61 && shootY[1]+13.5>teamDiaY && shootY[1]+13.5<teamDiaY+61){
+           teamDiamond[4]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[4] && shootCount[2]>=teamDiamond[4]-61 && shootY[2]+13.5>teamDiaY && shootY[2]+13.5<teamDiaY+61){
+           teamDiamond[4]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[4] && shootCount[3]>=teamDiamond[4]-61 && shootY[3]+13.5>teamDiaY && shootY[3]+13.5<teamDiaY+61){
+           teamDiamond[4]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[4] && shootCount[4]>=teamDiamond[4]-61 && shootY[4]+13.5>teamDiaY && shootY[4]+13.5<teamDiaY+61){
+           teamDiamond[4]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+//ship5        
         if(upDetect>=teamDiamond[5] && upDetect<=teamDiamond[5]+61 && fighterY>=teamDiaY-teamDiaAngle && fighterY<=teamDiaY-teamDiaAngle+61 || downDetect>=teamDiamond[5] && downDetect<=teamDiamond[5]+61 && fighterY+51>=teamDiaY-teamDiaAngle && fighterY+51<=teamDiaY-teamDiaAngle+61
       || leftDetect>=teamDiaY-teamDiaAngle && leftDetect<=teamDiaY-teamDiaAngle+61 && fighterX>=teamDiamond[5] && fighterX<=teamDiamond[5]+61){
         teamDiamond[5]=5000;
@@ -504,7 +939,33 @@ void draw()
           }
           
         }
-        
+        if(shootCount[0]<=teamDiamond[5] && shootCount[0]>=teamDiamond[5]-61 && shootY[0]+13.5>teamDiaY-teamDiaAngle && shootY[0]+13.5<teamDiaY-teamDiaAngle+61){             //bullet hit
+           teamDiamond[5]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[5] && shootCount[1]>=teamDiamond[5]-61 && shootY[1]+13.5>teamDiaY-teamDiaAngle && shootY[1]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[5]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[5] && shootCount[2]>=teamDiamond[5]-61 && shootY[2]+13.5>teamDiaY-teamDiaAngle && shootY[2]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[5]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[5] && shootCount[3]>=teamDiamond[5]-61 && shootY[3]+13.5>teamDiaY-teamDiaAngle && shootY[3]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[5]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[5] && shootCount[4]>=teamDiamond[5]-61 && shootY[4]+13.5>teamDiaY-teamDiaAngle && shootY[4]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[5]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+
+//ship6        
         if(upDetect>=teamDiamond[6] && upDetect<=teamDiamond[6]+61 && fighterY>=teamDiaY-teamDiaAngle*2 && fighterY<=teamDiaY-teamDiaAngle*2+61 || downDetect>=teamDiamond[6] && downDetect<=teamDiamond[6]+61 && fighterY+51>=teamDiaY-teamDiaAngle*2 && fighterY+51<=teamDiaY-teamDiaAngle*2+61
       || leftDetect>=teamDiaY-teamDiaAngle*2 && leftDetect<=teamDiaY-teamDiaAngle*2+61 && fighterX>=teamDiamond[6] && fighterX<=teamDiamond[6]+61){
         teamDiamond[6]=5000;
@@ -517,7 +978,33 @@ void draw()
           }
           
         }
-        
+        if(shootCount[0]<=teamDiamond[6] && shootCount[0]>=teamDiamond[6]-61 && shootY[0]+13.5>teamDiaY-teamDiaAngle*2 && shootY[0]+13.5<teamDiaY-teamDiaAngle*2+61){             //bullet hit
+           teamDiamond[6]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[6] && shootCount[1]>=teamDiamond[6]-61 && shootY[1]+13.5>teamDiaY-teamDiaAngle*2 && shootY[1]+13.5<teamDiaY-teamDiaAngle*2+61){
+           teamDiamond[6]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[6] && shootCount[2]>=teamDiamond[6]-61 && shootY[2]+13.5>teamDiaY-teamDiaAngle*2 && shootY[2]+13.5<teamDiaY-teamDiaAngle*2+61){
+           teamDiamond[6]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[6] && shootCount[3]>=teamDiamond[6]-61 && shootY[3]+13.5>teamDiaY-teamDiaAngle*2 && shootY[3]+13.5<teamDiaY-teamDiaAngle*2+61){
+           teamDiamond[6]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[6] && shootCount[4]>=teamDiamond[6]-61 && shootY[4]+13.5>teamDiaY-teamDiaAngle*2 && shootY[4]+13.5<teamDiaY-teamDiaAngle*2+61){
+           teamDiamond[6]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+
+//ship7        
         if(upDetect>=teamDiamond[7] && upDetect<=teamDiamond[7]+61 && fighterY>=teamDiaY-teamDiaAngle && fighterY<=teamDiaY-teamDiaAngle+61 || downDetect>=teamDiamond[7] && downDetect<=teamDiamond[7]+61 && fighterY+51>=teamDiaY-teamDiaAngle && fighterY+51<=teamDiaY-teamDiaAngle+61
       || leftDetect>=teamDiaY-teamDiaAngle && leftDetect<=teamDiaY-teamDiaAngle+61 && fighterX>=teamDiamond[7] && fighterX<=teamDiamond[7]+61){
         teamDiamond[7]=5000;
@@ -530,61 +1017,36 @@ void draw()
           }
           
         }
+        if(shootCount[0]<=teamDiamond[7] && shootCount[0]>=teamDiamond[7]-61 && shootY[0]+13.5>teamDiaY-teamDiaAngle && shootY[0]+13.5<teamDiaY-teamDiaAngle+61){             //bullet hit
+           teamDiamond[7]=5000;
+           shootCount[0]=1000000;
+           shootAllow[0]=true;
+         }
+         if(shootCount[1]<=teamDiamond[7] && shootCount[1]>=teamDiamond[7]-61 && shootY[1]+13.5>teamDiaY-teamDiaAngle && shootY[1]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[7]=5000;
+           shootCount[1]=1000000;
+           shootAllow[1]=true;
+         }
+         if(shootCount[2]<=teamDiamond[7] && shootCount[2]>=teamDiamond[7]-61 && shootY[2]+13.5>teamDiaY-teamDiaAngle && shootY[2]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[7]=5000;
+           shootCount[2]=1000000;
+           shootAllow[2]=true;
+         }
+         if(shootCount[3]<=teamDiamond[7] && shootCount[3]>=teamDiamond[7]-61 && shootY[3]+13.5>teamDiaY-teamDiaAngle && shootY[3]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[7]=5000;
+           shootCount[3]=1000000;
+           shootAllow[3]=true;
+         }
+         if(shootCount[4]<=teamDiamond[7] && shootCount[4]>=teamDiamond[7]-61 && shootY[4]+13.5>teamDiaY-teamDiaAngle && shootY[4]+13.5<teamDiaY-teamDiaAngle+61){
+           teamDiamond[7]=5000;
+           shootCount[4]=1000000;
+           shootAllow[4]=true;
+         }
+
+
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        if(diamondTrack>=1000){                                //team diamond reset
+//team diamond reset        
+        if(diamondTrack>=1000){                                
           for(int count3=0;count3<5;count3++){                       
             teamDiamond[count3]=-61-61*count3*13/10;         
           } 
@@ -599,20 +1061,10 @@ void draw()
             }else{
             teamDiaAngle=random((419-teamDiaY)/3,0);
             }
-        diamondTrack=teamDiamond[0];  
+        diamondTrack=-61;  
         ENEMYTEAM=straight;
         }
-        
-        
-        
-         
-         
-        
-        
-        
-        
-        
-       
+     
         break;                            //teams end
    }
 
@@ -691,15 +1143,25 @@ void draw()
             teamDiaAngle=random((419-teamDiaY)/3,0);
             }
         diamondTrack=teamDiamond[0];  
-       
+        for(int i=0;i<5;i++){                               //reset shoot
+              shootCount[i]=1000000;
+           }
+        for(int i=0;i<5;i++){
+              shootY[i]=fighterY;
+           }   
+        for(int i=0;i<5;i++){
+              shootAllow[i]=true;
+           }
+
+
  //-----------------------------------------------------------------------------------
     ENEMYTEAM=straight;
     GAMEMODE=playing;
     
        } 
-    }
+  }
   break;
-   }//case gamemode end
+       }//case gamemode end
 
 
    }                               //void draw end
@@ -727,7 +1189,7 @@ void draw()
 
 
 
-void keyPressed(){                    //key detection
+void keyPressed(){  //key detection
     if (keyPressed) {
     switch (keyCode) {
       case UP:
@@ -741,12 +1203,13 @@ void keyPressed(){                    //key detection
       break;
       case RIGHT:
         rightPressed=true;
-      break;
-      case 32:                       //space bar
-        shooting=true;
+      break;      
     }
-  }
-
+    
+    }
+    if (key ==' ') {
+        shooting=true;
+       }
 }
 
 
@@ -765,8 +1228,7 @@ void keyReleased(){
       case RIGHT:
         rightPressed=false;
         break;
-      case 32:
-        shooting=false;
+
     }
   }
 
