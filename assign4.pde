@@ -28,8 +28,9 @@ int[] shootCount=new int[5];
 int[] shootY=new int[5];
 int[] shootTouch=new int[5];
 boolean[] shootAllow=new boolean[5];
-//---------------------------------------------------
-int upDetect,downDetect,leftDetect,rightDetect;    //detect touch
+//---------------------------------------------------fighter detect touch
+int upDetect,downDetect,leftDetect,rightDetect;
+//---------------------------------------------------flame
 
 
 
@@ -241,7 +242,7 @@ void draw()
         shooting=false;
             }
             
-//-----------------------------------------------------------------------------------------------------damage detect
+//-----------------------------------------------------------------------------------------------------flame detect
         
 
          
@@ -1168,26 +1169,6 @@ void draw()
   
   
 //*********************************************************************************************end game 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
-
 
 void keyPressed(){  //key detection
     if (keyPressed) {
@@ -1203,13 +1184,12 @@ void keyPressed(){  //key detection
       break;
       case RIGHT:
         rightPressed=true;
-      break;      
-    }
-    
-    }
-    if (key ==' ') {
-        shooting=true;
-       }
+      break;
+      case 32:
+         shooting=true;
+         break;
+     }    
+    }    
 }
 
 
@@ -1228,8 +1208,6 @@ void keyReleased(){
       case RIGHT:
         rightPressed=false;
         break;
-
     }
   }
-
 }
