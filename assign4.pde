@@ -1389,7 +1389,7 @@ void draw()
   
   
 void keyPressed(){  //key detection
-    if (keyPressed) {
+    if (key==CODED) {
     switch (keyCode) {
       case UP:
         upPressed=true;
@@ -1403,13 +1403,18 @@ void keyPressed(){  //key detection
       case RIGHT:
         rightPressed=true;
       break;
-      case 32:
+      
+     }    
+    }
+    if(keyPressed){
+      switch(keyCode){
+        case 32:
          shooting=true;
          break;
-     }    
-    }    
+       }
+         
+    }
 }
-
 void keyReleased(){
       if (keyPressed) {
     switch (keyCode) {
