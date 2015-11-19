@@ -1411,7 +1411,7 @@ void keyPressed(){  //key detection
 }
 
 void keyReleased(){
-      if (key == CODED) {
+      if (keyPressed) {
     switch (keyCode) {
       case UP:
         upPressed=false;
