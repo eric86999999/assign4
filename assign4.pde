@@ -25,6 +25,7 @@ float teamDiaAngle;
 int diamondTrack;
 //---------------------------------------------------
 int upDetect,downDetect,leftDetect,rightDetect;    //detect touch
+int shootUp;
 
 
 
@@ -126,16 +127,16 @@ void draw()
    //------------------------------------------------------------------------        
       image(fighter,fighterX,fighterY);     //fighter moving
         if(upPressed && fighterY>0){
-          fighterY-=4;
+          fighterY-=3;
         }
         if(downPressed && fighterY<429){
-          fighterY+=4;
+          fighterY+=3;
         }
         if(leftPressed && fighterX>0 ){
-          fighterX-=4;
+          fighterX-=3;
         }
         if(rightPressed && fighterX<589){
-          fighterX+=4;
+          fighterX+=3;
         }     
 //----------------------------------------------------------------------------
       rectMode(CORNERS);                    //hp gauge 410-610
@@ -153,8 +154,8 @@ void draw()
        leftDetect=floor(random(fighterY,fighterY+51));
        rightDetect=floor(random(fighterY,fighterY+51));
 //------------------------------------------------------healing detect 
-       if(upDetect>=treasureX && upDetect<=treasureX+41 && fighterY>=treasureY && fighterY<=treasureY+41 || downDetect>=treasureX && downDetect<=treasureX+41 && fighterY+51>=treasureY && fighterY+51<=treasureY+41
-          || leftDetect>=treasureY && leftDetect<=treasureY+41 && fighterX>=treasureX && fighterX<=treasureX+41 || rightDetect>=treasureY && rightDetect<=treasureY+41 && fighterX+51>=treasureX && fighterX+51<=treasureX+41){
+       if( leftDetect>=treasureY && leftDetect<=treasureY+41 && fighterX>=treasureX && fighterX<=treasureX+41 || rightDetect>=treasureY && rightDetect<=treasureY+41 && fighterX+51>=treasureX && fighterX+51<=treasureX+41
+       || leftDetect>=treasureY && leftDetect<=treasureY+41 && fighterX>=treasureX && fighterX<=treasureX+41 || rightDetect>=treasureY && rightDetect<=treasureY+41 && fighterX+51>=treasureX && fighterX+51<=treasureX+41){
           treasureX=floor(random(0,589));
           treasureY=floor(random(0,429));      
           if(health<=590){
@@ -180,7 +181,7 @@ void draw()
         straightTrack+=4;
 //---------------------------------------------------------fighter crash detect        
         if(upDetect>=teamStraight[0] && upDetect<=teamStraight[0]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[0] && downDetect<=teamStraight[0]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
-      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[0] && fighterX<=teamStraight[0]+61 || rightDetect>=teamStrY && rightDetect<=teamStrY+61 && fighterX+51>=teamStraight[0] && fighterX+51<=teamStraight[0]+61){
+      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[0] && fighterX<=teamStraight[0]+61 ){
         teamStraight[0]=5000;
         
         
@@ -193,7 +194,7 @@ void draw()
         }
         
         if(upDetect>=teamStraight[1] && upDetect<=teamStraight[1]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[1] && downDetect<=teamStraight[1]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
-      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[1] && fighterX<=teamStraight[1]+61 || rightDetect>=teamStrY && rightDetect<=teamStrY+61 && fighterX+51>=teamStraight[1] && fighterX+51<=teamStraight[1]+61){
+      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[1] && fighterX<=teamStraight[1]+61){
         teamStraight[1]=5000;
         
         
@@ -205,7 +206,7 @@ void draw()
         }
         
         if(upDetect>=teamStraight[2] && upDetect<=teamStraight[2]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[2] && downDetect<=teamStraight[2]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
-      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[2] && fighterX<=teamStraight[2]+61 || rightDetect>=teamStrY && rightDetect<=teamStrY+61 && fighterX+51>=teamStraight[2] && fighterX+51<=teamStraight[2]+61){
+      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[2] && fighterX<=teamStraight[2]+61){
         teamStraight[2]=5000;
         
         
@@ -217,7 +218,7 @@ void draw()
         }
         
         if(upDetect>=teamStraight[3] && upDetect<=teamStraight[3]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[3] && downDetect<=teamStraight[3]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
-      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[3] && fighterX<=teamStraight[3]+61 || rightDetect>=teamStrY && rightDetect<=teamStrY+61 && fighterX+51>=teamStraight[3] && fighterX+51<=teamStraight[3]+61){
+      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[3] && fighterX<=teamStraight[3]+61){
         teamStraight[3]=5000;
         
         
@@ -229,7 +230,7 @@ void draw()
         }
         
         if(upDetect>=teamStraight[4] && upDetect<=teamStraight[4]+61 && fighterY>=teamStrY && fighterY<=teamStrY+61 || downDetect>=teamStraight[4] && downDetect<=teamStraight[4]+61 && fighterY+51>=teamStrY && fighterY+51<=teamStrY+61
-      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[4] && fighterX<=teamStraight[4]+61 || rightDetect>=teamStrY && rightDetect<=teamStrY+61 && fighterX+51>=teamStraight[4] && fighterX+51<=teamStraight[4]+61){
+      || leftDetect>=teamStrY && leftDetect<=teamStrY+61 && fighterX>=teamStraight[4] && fighterX<=teamStraight[4]+61){
         teamStraight[4]=5000;
         
         
@@ -279,7 +280,7 @@ void draw()
         
         
           if(upDetect>=teamSlanted[0] && upDetect<=teamSlanted[0]+61 && fighterY>=teamSlaY && fighterY<=teamSlaY+61 || downDetect>=teamSlanted[0] && downDetect<=teamSlanted[0]+61 && fighterY+51>=teamSlaY && fighterY+51<=teamSlaY+61
-      || leftDetect>=teamSlaY && leftDetect<=teamSlaY+61 && fighterX>=teamSlanted[0] && fighterX<=teamSlanted[0]+61 || rightDetect>=teamSlaY && rightDetect<=teamSlaY+61 && fighterX+51>=teamSlanted[0] && fighterX+51<=teamSlanted[0]+61){
+      || leftDetect>=teamSlaY && leftDetect<=teamSlaY+61 && fighterX>=teamSlanted[0] && fighterX<=teamSlanted[0]+61){
         teamSlanted[0]=5000;
         
         
@@ -292,7 +293,7 @@ void draw()
         }
         
         if(upDetect>=teamSlanted[1] && upDetect<=teamSlanted[1]+61 && fighterY>=teamSlaY+teamSlaAngle && fighterY<=teamSlaY+teamSlaAngle+61 || downDetect>=teamSlanted[1] && downDetect<=teamSlanted[1]+61 && fighterY+51>=teamSlaY+teamSlaAngle && fighterY+51<=teamSlaY+teamSlaAngle+61
-      || leftDetect>=teamSlaY+teamSlaAngle && leftDetect<=teamSlaY+teamSlaAngle+61 && fighterX>=teamSlanted[1] && fighterX<=teamSlanted[0]+61 || rightDetect>=teamSlaY+teamSlaAngle && rightDetect<=teamSlaY+teamSlaAngle+61 && fighterX+51>=teamSlanted[1] && fighterX+51<=teamSlanted[1]+61){
+      || leftDetect>=teamSlaY+teamSlaAngle && leftDetect<=teamSlaY+teamSlaAngle+61 && fighterX>=teamSlanted[1] && fighterX<=teamSlanted[0]+61){
         teamSlanted[1]=5000;
         
         
@@ -305,7 +306,7 @@ void draw()
         }
         
         if(upDetect>=teamSlanted[2] && upDetect<=teamSlanted[2]+61 && fighterY>=teamSlaY+teamSlaAngle*2 && fighterY<=teamSlaY+teamSlaAngle*2+61 || downDetect>=teamSlanted[2] && downDetect<=teamSlanted[2]+61 && fighterY+51>=teamSlaY+teamSlaAngle*2 && fighterY+51<=teamSlaY+teamSlaAngle*2+61
-      || leftDetect>=teamSlaY+teamSlaAngle*2 && leftDetect<=teamSlaY+teamSlaAngle*2+61 && fighterX>=teamSlanted[2] && fighterX<=teamSlanted[2]+61 || rightDetect>=teamSlaY+teamSlaAngle*2 && rightDetect<=teamSlaY+teamSlaAngle*2+61 && fighterX+51>=teamSlanted[2] && fighterX+51<=teamSlanted[2]+61){
+      || leftDetect>=teamSlaY+teamSlaAngle*2 && leftDetect<=teamSlaY+teamSlaAngle*2+61 && fighterX>=teamSlanted[2] && fighterX<=teamSlanted[2]+61){
         teamSlanted[2]=5000;
         
         
@@ -318,7 +319,7 @@ void draw()
         }
         
         if(upDetect>=teamSlanted[3] && upDetect<=teamSlanted[3]+61 && fighterY>=teamSlaY && fighterY<=teamSlaY+61 || downDetect>=teamSlanted[3] && downDetect<=teamSlanted[3]+61 && fighterY+51>=teamSlaY+teamSlaAngle*3 && fighterY+51<=teamSlaY+teamSlaAngle*3+61
-      || leftDetect>=teamSlaY+teamSlaAngle*3 && leftDetect<=teamSlaY+teamSlaAngle*3+61 && fighterX>=teamSlanted[3] && fighterX<=teamSlanted[3]+61 || rightDetect>=teamSlaY+teamSlaAngle*3 && rightDetect<=teamSlaY+teamSlaAngle*3+61 && fighterX+51>=teamSlanted[3] && fighterX+51<=teamSlanted[3]+61){
+      || leftDetect>=teamSlaY+teamSlaAngle*3 && leftDetect<=teamSlaY+teamSlaAngle*3+61 && fighterX>=teamSlanted[3] && fighterX<=teamSlanted[3]+61){
         teamSlanted[3]=5000;
         
         
@@ -331,7 +332,7 @@ void draw()
         }
         
         if(upDetect>=teamSlanted[4] && upDetect<=teamSlanted[4]+61 && fighterY>=teamSlaY+teamSlaAngle*4 && fighterY<=teamSlaY+teamSlaAngle*4+61 || downDetect>=teamSlanted[4] && downDetect<=teamSlanted[4]+61 && fighterY+51>=teamSlaY+teamSlaAngle*4 && fighterY+51<=teamSlaY+teamSlaAngle*4+61
-      || leftDetect>=teamSlaY+teamSlaAngle*4 && leftDetect<=teamSlaY+teamSlaAngle*4+61 && fighterX>=teamSlanted[4] && fighterX<=teamSlanted[4]+61 || rightDetect>=teamSlaY+teamSlaAngle*4 && rightDetect<=teamSlaY+teamSlaAngle*4+61 && fighterX+51>=teamSlanted[4] && fighterX+51<=teamSlanted[4]+61){
+      || leftDetect>=teamSlaY+teamSlaAngle*4 && leftDetect<=teamSlaY+teamSlaAngle*4+61 && fighterX>=teamSlanted[4] && fighterX<=teamSlanted[4]+61){
         teamSlanted[4]=5000;
         
         
@@ -427,7 +428,7 @@ void draw()
         
         
         if(upDetect>=teamDiamond[0] && upDetect<=teamDiamond[0]+61 && fighterY>=teamDiaY && fighterY<=teamDiaY+61 || downDetect>=teamDiamond[0] && downDetect<=teamDiamond[0]+61 && fighterY+51>=teamDiaY && fighterY+51<=teamDiaY+61
-      || leftDetect>=teamDiaY && leftDetect<=teamDiaY+61 && fighterX>=teamStraight[0] && fighterX<=teamStraight[0]+61 || rightDetect>=teamDiaY && rightDetect<=teamDiaY+61 && fighterX+51>=teamDiamond[0] && fighterX+51<=teamDiamond[0]+61){        
+      || leftDetect>=teamDiaY && leftDetect<=teamDiaY+61 && fighterX>=teamStraight[0] && fighterX<=teamStraight[0]+61){        
         teamDiamond[0]=5000;
         
         
@@ -440,7 +441,7 @@ void draw()
         }
         
         if(upDetect>=teamDiamond[1] && upDetect<=teamDiamond[1]+61 && fighterY>=teamDiaY+teamDiaAngle && fighterY<=teamDiaY+teamDiaAngle+61 || downDetect>=teamDiamond[1] && downDetect<=teamDiamond[1]+61 && fighterY+51>=teamDiaY+teamDiaAngle && fighterY+51<=teamDiaY+teamDiaAngle+61
-      || leftDetect>=teamDiaY+teamDiaAngle && leftDetect<=teamDiaY+teamDiaAngle+61 && fighterX>=teamDiamond[1] && fighterX<=teamDiamond[1]+61 || rightDetect>=teamDiaY+teamDiaAngle && rightDetect<=teamDiaY+teamDiaAngle+61 && fighterX+51>=teamDiamond[1] && fighterX+51<=teamDiamond[1]+61){
+      || leftDetect>=teamDiaY+teamDiaAngle && leftDetect<=teamDiaY+teamDiaAngle+61 && fighterX>=teamDiamond[1] && fighterX<=teamDiamond[1]+61){
         teamDiamond[1]=5000;
         
         
@@ -453,7 +454,7 @@ void draw()
         }
         
         if(upDetect>=teamDiamond[2] && upDetect<=teamDiamond[2]+61 && fighterY>=teamDiaY+teamDiaAngle*2 && fighterY<=teamDiaY+teamDiaAngle*2+61 || downDetect>=teamDiamond[2] && downDetect<=teamDiamond[2]+61 && fighterY+51>=teamDiaY+teamDiaAngle*2 && fighterY+51<=teamDiaY+teamDiaAngle*2+61
-      || leftDetect>=teamDiaY+teamDiaAngle*2 && leftDetect<=teamDiaY+teamDiaAngle*2+61 && fighterX>=teamDiamond[2] && fighterX<=teamDiamond[2]+61 || rightDetect>=teamDiaY+teamDiaAngle*2 && rightDetect<=teamDiaY+teamDiaAngle*2+61 && fighterX+51>=teamDiamond[2] && fighterX+51<=teamDiamond[2]+61){
+      || leftDetect>=teamDiaY+teamDiaAngle*2 && leftDetect<=teamDiaY+teamDiaAngle*2+61 && fighterX>=teamDiamond[2] && fighterX<=teamDiamond[2]+61){
         teamDiamond[2]=5000;
         
         
@@ -466,7 +467,7 @@ void draw()
         }
         
         if(upDetect>=teamDiamond[3] && upDetect<=teamDiamond[3]+61 && fighterY>=teamDiaY+teamDiaAngle && fighterY<=teamDiaY+teamDiaAngle+61 || downDetect>=teamDiamond[3] && downDetect<=teamDiamond[3]+61 && fighterY+51>=teamDiaY+teamDiaAngle && fighterY+51<=teamDiaY+teamDiaAngle+61
-      || leftDetect>=teamDiaY+teamDiaAngle && leftDetect<=teamDiaY+teamDiaAngle+61 && fighterX>=teamDiamond[3] && fighterX<=teamDiamond[3]+61 || rightDetect>=teamDiaY+teamDiaAngle && rightDetect<=teamDiaY+teamDiaAngle+61 && fighterX+51>=teamDiamond[3] && fighterX+51<=teamDiamond[3]+61){
+      || leftDetect>=teamDiaY+teamDiaAngle && leftDetect<=teamDiaY+teamDiaAngle+61 && fighterX>=teamDiamond[3] && fighterX<=teamDiamond[3]+61){
         teamDiamond[3]=5000;
         
         
@@ -479,7 +480,7 @@ void draw()
         }
         
         if(upDetect>=teamDiamond[4] && upDetect<=teamDiamond[4]+61 && fighterY>=teamDiaY && fighterY<=teamDiaY+61 || downDetect>=teamDiamond[4] && downDetect<=teamDiamond[4]+61 && fighterY+51>=teamDiaY && fighterY+51<=teamDiaY+61
-      || leftDetect>=teamDiaY && leftDetect<=teamDiaY+61 && fighterX>=teamDiamond[4] && fighterX<=teamDiamond[4]+61 || rightDetect>=teamDiaY && rightDetect<=teamDiaY+61 && fighterX+51>=teamDiamond[4] && fighterX+51<=teamDiamond[4]+61){
+      || leftDetect>=teamDiaY && leftDetect<=teamDiaY+61 && fighterX>=teamDiamond[4] && fighterX<=teamDiamond[4]+61){
         teamDiamond[4]=5000;
         
         
@@ -492,7 +493,7 @@ void draw()
         }
         
         if(upDetect>=teamDiamond[5] && upDetect<=teamDiamond[5]+61 && fighterY>=teamDiaY-teamDiaAngle && fighterY<=teamDiaY-teamDiaAngle+61 || downDetect>=teamDiamond[5] && downDetect<=teamDiamond[5]+61 && fighterY+51>=teamDiaY-teamDiaAngle && fighterY+51<=teamDiaY-teamDiaAngle+61
-      || leftDetect>=teamDiaY-teamDiaAngle && leftDetect<=teamDiaY-teamDiaAngle+61 && fighterX>=teamDiamond[5] && fighterX<=teamDiamond[5]+61 || rightDetect>=teamDiaY-teamDiaAngle && rightDetect<=teamDiaY-teamDiaAngle+61 && fighterX+51>=teamDiamond[5] && fighterX+51<=teamDiamond[5]+61){
+      || leftDetect>=teamDiaY-teamDiaAngle && leftDetect<=teamDiaY-teamDiaAngle+61 && fighterX>=teamDiamond[5] && fighterX<=teamDiamond[5]+61){
         teamDiamond[5]=5000;
         
         
@@ -505,7 +506,7 @@ void draw()
         }
         
         if(upDetect>=teamDiamond[6] && upDetect<=teamDiamond[6]+61 && fighterY>=teamDiaY-teamDiaAngle*2 && fighterY<=teamDiaY-teamDiaAngle*2+61 || downDetect>=teamDiamond[6] && downDetect<=teamDiamond[6]+61 && fighterY+51>=teamDiaY-teamDiaAngle*2 && fighterY+51<=teamDiaY-teamDiaAngle*2+61
-      || leftDetect>=teamDiaY-teamDiaAngle*2 && leftDetect<=teamDiaY-teamDiaAngle*2+61 && fighterX>=teamDiamond[6] && fighterX<=teamDiamond[6]+61 || rightDetect>=teamDiaY-teamDiaAngle*2 && rightDetect<=teamDiaY-teamDiaAngle*2+61 && fighterX+51>=teamDiamond[6] && fighterX+51<=teamDiamond[6]+61){
+      || leftDetect>=teamDiaY-teamDiaAngle*2 && leftDetect<=teamDiaY-teamDiaAngle*2+61 && fighterX>=teamDiamond[6] && fighterX<=teamDiamond[6]+61){
         teamDiamond[6]=5000;
         
         
@@ -518,7 +519,7 @@ void draw()
         }
         
         if(upDetect>=teamDiamond[7] && upDetect<=teamDiamond[7]+61 && fighterY>=teamDiaY-teamDiaAngle && fighterY<=teamDiaY-teamDiaAngle+61 || downDetect>=teamDiamond[7] && downDetect<=teamDiamond[7]+61 && fighterY+51>=teamDiaY-teamDiaAngle && fighterY+51<=teamDiaY-teamDiaAngle+61
-      || leftDetect>=teamDiaY-teamDiaAngle && leftDetect<=teamDiaY-teamDiaAngle+61 && fighterX>=teamDiamond[7] && fighterX<=teamDiamond[7]+61 || rightDetect>=teamDiaY-teamDiaAngle && rightDetect<=teamDiaY-teamDiaAngle+61 && fighterX+51>=teamDiamond[7] && fighterX+51<=teamDiamond[7]+61){
+      || leftDetect>=teamDiaY-teamDiaAngle && leftDetect<=teamDiaY-teamDiaAngle+61 && fighterX>=teamDiamond[7] && fighterX<=teamDiamond[7]+61){
         teamDiamond[7]=5000;
         
         
