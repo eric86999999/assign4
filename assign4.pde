@@ -32,7 +32,7 @@ int upDetect,downDetect,leftDetect,rightDetect;
 int numFlames=5;
 int currentFlame;
 PImage[] flames = new PImage[numFlames];
-float flameX=10000,flameY=10000;     //tracking axis
+float flameX=2000,flameY=2000;     //tracking axis
 
 
 
@@ -59,6 +59,7 @@ void setup () {
   health=450;
   treasureX=floor(random(30,610));
   treasureY=floor(random(30,450));
+  frameRate(60);
 //straight startup
   for(int count1=0;count1<5;count1++){                       
             teamStraight[count1]=-61-61*count1*13/10;         
@@ -105,7 +106,7 @@ void setup () {
       flames[i]=loadImage("img/flame"+(i+1)+".png");
     
     }
-    frameRate(60);
+    
 
 }
 
@@ -244,18 +245,30 @@ void draw()
         shooting=false;
             }
 //flame detect
-    
-    if(frameCount%(60/10)==0){
-      int i =(currentFlame++)%numFlames;
-      image(flames[i],flameX,flameY);
-       if(i==4){
-         flameX=10000;
-         flameY=10000;
-       }
-        //<>//
+    currentFlame++;
+    if(currentFlame>=0&&currentFlame<6){
+      image(flames[0],flameX,flameY);
     }
-      
     
+    if(currentFlame>=6&&currentFlame<12){
+      image(flames[1],flameX,flameY);
+    }
+        
+    if(currentFlame>=12&&currentFlame<18){
+      image(flames[2],flameX,flameY);
+    }
+       
+    if(currentFlame>=18&&currentFlame<24){
+      image(flames[3],flameX,flameY);
+    };    
+        
+     if(currentFlame>=24&&currentFlame<30){
+       image(flames[4],flameX,flameY);
+     }        
+     if(currentFlame==30){
+             flameX=2000;
+             flameY=2000;};
+        
 
 //enemy teams
       switch(ENEMYTEAM){
@@ -1407,7 +1420,10 @@ void keyPressed(){  //key detection
      }    
     }
     if(keyCode==' '){
+      
          shooting=true;
+       
+       
          
     }
 }
