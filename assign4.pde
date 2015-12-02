@@ -252,7 +252,7 @@ void draw()
          flameX=10000;
          flameY=10000;
        }
-       
+        //<>//
     }
       
     
@@ -1406,17 +1406,18 @@ void keyPressed(){  //key detection
       
      }    
     }
-    if(keyPressed){
-      switch(keyCode){
-        case 32:
+    if(keyCode==' '){
          shooting=true;
-         break;
-       }
          
     }
 }
+
+
+
+
+
 void keyReleased(){
-      if (keyPressed) {
+      if (key==CODED) {
     switch (keyCode) {
       case UP:
         upPressed=false;
